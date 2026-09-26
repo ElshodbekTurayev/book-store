@@ -10,6 +10,9 @@ echo ">>> PORT: ${PORT:-8000}"
 echo "==> Running migrations..."
 python manage.py migrate --noinput
 
+echo "==> Seeding data & admin accounts..."
+python manage.py seed_data
+
 echo "==> Collecting static files..."
 python manage.py collectstatic --noinput --clear
 

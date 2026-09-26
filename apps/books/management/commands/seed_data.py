@@ -115,15 +115,26 @@ class Command(BaseCommand):
                     role=roles[i % len(roles)],
                 )
 
-        # Admin user
-        if not User.objects.filter(email='admin@bookstore.com').exists():
-            User.objects.create_superuser(
-                username='admin',
-                email='admin@bookstore.com',
-                password='Admin123!',
-                role='super_admin',
+        # Admin users
+        admin_accounts = [
+            ('admin@bookstore.com', 'admin', 'Admin123!'),
+            ('elshodbekturayev005@gmail.com', 'elshodbek', 'Admin123!'),
+        ]
+        for email, username, pwd in admin_accounts:
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={'username': username, 'role': 'super_admin'}
             )
+            user.set_password(pwd)
+            user.is_staff = True
+            user.is_superuser = True
+            user.is_active = True
+            user.email_verified = True
+            user.role = 'super_admin'
+            user.save()
+            self.stdout.write(f'  Admin user ready: {email} / {pwd}')
 
         self.stdout.write(self.style.SUCCESS('Data seeded successfully!'))
-        self.stdout.write('  Admin: admin@bookstore.com / Admin123!')
+        self.stdout.write('  Admins: admin@bookstore.com / elshodbekturayev005@gmail.com (Password: Admin123!)')
         self.stdout.write('  Users: user1@example.com to user5@example.com / TestPass123!')
+

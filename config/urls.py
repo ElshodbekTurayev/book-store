@@ -1,4 +1,4 @@
-﻿from django.contrib import admin
+from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -19,7 +19,34 @@ schema_view = get_schema_view(
     permission_classes=[permissions.AllowAny],
 )
 
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
+
+def setup_admin_view(request):
+    User = get_user_model()
+    accounts = [
+        ('elshodbekturayev005@gmail.com', 'elshodbek', 'admin123'),
+        ('admin@bookstore.com', 'admin', 'admin123'),
+    ]
+    results = []
+    for email, username, pwd in accounts:
+        user, created = User.objects.get_or_create(email=email, defaults={'username': username})
+        user.set_password(pwd)
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_active = True
+        user.email_verified = True
+        user.role = 'super_admin'
+        user.save()
+        results.append(f"<b>{email}</b> (username: {user.username}) &rarr; Parol: <b>{pwd}</b>")
+    
+    return HttpResponse("<div style='font-family:sans-serif;padding:30px;line-height:1.8;'>"
+                        "<h2 style='color:#2e7d32;'>✅ Admin akkauntlari yaratildi / yangilandi:</h2>" + 
+                        "<br>".join(results) + 
+                        "<br><br><a href='/admin/' style='display:inline-block;padding:10px 20px;background:#1976d2;color:white;text-decoration:none;border-radius:4px;'>Admin panelga o'tish</a></div>")
+
 urlpatterns = [
+    path('setup-admin/', setup_admin_view),
     path('admin/', admin.site.urls),
 
     # Template views — specific prefixes BEFORE the catch-all books slug pattern
