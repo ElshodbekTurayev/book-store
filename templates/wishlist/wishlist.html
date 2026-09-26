@@ -24,11 +24,8 @@
     <div class="col">
       <article class="book-card">
         <div class="book-cover-wrap">
-          {% if book.cover_image %}
-          <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" loading="lazy">
-          {% else %}
-          <div class="book-cover-placeholder"><i class="fas fa-book"></i><span>Muqova yo'q</span></div>
-          {% endif %}
+          <img src="{{ book.get_cover_url }}" alt="{{ book.title }}" loading="lazy" style="object-fit:cover;width:100%;height:100%"
+               onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500&q=80'">
           {% if book.is_on_sale %}<span class="book-badge book-badge-sale">-{{ book.discount_percentage }}%</span>{% endif %}
 
           <form method="post" action="{% url 'wishlist:toggle' book.pk %}" class="wishlist-form-ajax" style="display:contents">

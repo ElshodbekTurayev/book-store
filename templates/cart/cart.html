@@ -24,11 +24,8 @@
       {% for item in cart.items.all %}
       <div class="cart-item" id="cart-row-{{ item.pk }}">
         <div class="cart-item-img">
-          {% if item.book.cover_image %}
-          <img src="{{ item.book.cover_image.url }}" alt="{{ item.book.title }}" loading="lazy">
-          {% else %}
-          <div class="book-cover-placeholder" style="height:100%"><i class="fas fa-book" style="font-size:1.2rem"></i></div>
-          {% endif %}
+          <img src="{{ item.book.get_cover_url }}" alt="{{ item.book.title }}" loading="lazy" style="object-fit:cover;width:100%;height:100%"
+               onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500&q=80'">
         </div>
         <div style="flex:1;min-width:0">
           <a href="{{ item.book.get_absolute_url }}" style="font-size:.92rem;font-weight:700;color:var(--t-primary);text-decoration:none;display:block;margin-bottom:3px">{{ item.book.title|truncatechars:60 }}</a>
