@@ -110,6 +110,25 @@ class Book(models.Model):
             self.stock_status = self.StockStatus.IN_STOCK
         super().save(*args, **kwargs)
 
+    COVER_PLACEHOLDERS = [
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=500&q=80",
+    ]
+
+    @property
+    def get_cover_url(self):
+        if self.cover_image:
+            try:
+                return self.cover_image.url
+            except Exception:
+                pass
+        idx = (self.id or 0) % len(self.COVER_PLACEHOLDERS)
+        return self.COVER_PLACEHOLDERS[idx]
+
     def get_absolute_url(self):
         return reverse('books:detail', kwargs={'slug': self.slug})
 
