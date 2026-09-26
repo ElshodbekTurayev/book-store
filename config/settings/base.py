@@ -1,4 +1,4 @@
-﻿import os
+import os
 from pathlib import Path
 from decouple import config, Csv
 
@@ -227,6 +227,7 @@ LOGGING = {
 
 # django-allauth
 AUTHENTICATION_BACKENDS = [
+    'apps.users.backends.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
